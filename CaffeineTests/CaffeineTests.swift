@@ -7,9 +7,12 @@
 //
 
 import XCTest
+import CoreLocation
 @testable import Caffeine
 
 class CaffeineTests: XCTestCase {
+    
+    let service = Service()
     
     override func setUp() {
         super.setUp()
@@ -21,16 +24,15 @@ class CaffeineTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
+    func testServiceToGetVenues() {
+        let expectation = expectationWithDescription("data task expectation")
+        
+        service.exploreVenues(CLLocationCoordinate2D(latitude: 40.7,longitude: -74), section: "cafe") { venues, error in
+            XCTAssertNil(error)
+            expectation.fulfill()
         }
+        
+        waitForExpectationsWithTimeout(5, handler: nil)
     }
     
 }
