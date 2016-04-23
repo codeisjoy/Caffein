@@ -7,16 +7,20 @@
 //
 
 import UIKit
+import CoreLocation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    private var splitViewControllerDelegate = MainContainerDelegate()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        // Config the main container which is a split view controller
         let container = window?.rootViewController as? UISplitViewController
+        container?.delegate = splitViewControllerDelegate
         container?.preferredDisplayMode = .AllVisible
-        
+    
         return true
     }
 
@@ -45,3 +49,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+// MARK: UISplitViewControllerDelegate Extension
+
+class MainContainerDelegate: UISplitViewControllerDelegate {
+    
+    @objc func splitViewController(
+        splitViewController: UISplitViewController,
+        collapseSecondaryViewController secondaryViewController: UIViewController,
+        ontoPrimaryViewController primaryViewController: UIViewController) -> Bool
+    {
+        // To force the split view controler
+        // to show master in horizontaly compact size
+        return true
+    }
+    
+}

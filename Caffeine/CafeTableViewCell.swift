@@ -10,13 +10,19 @@ import UIKit
 
 class CafeTableViewCell: UITableViewCell {
     
+    // MARK: IBOutlets
+    
     @IBOutlet var nameLable: UILabel?
     @IBOutlet var addressLable: UILabel?
     @IBOutlet var distanceLabel: UILabel?
     @IBOutlet var ratingLabel: UILabel?
   
+    // MARK: Overriden Methods
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        // Set UI elements default value
         
         addressLable?.text = "Unknown address"
         distanceLabel?.text = "No provided distance"

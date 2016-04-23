@@ -12,13 +12,19 @@ import Contacts
 
 class CafesViewController: UIViewController {
     
+    // MARK: IBOUtlets
+    
     @IBOutlet var tableView: UITableView?
+    
+    // MARK: Public Properties
     
     var venues: [Venue]? {
         didSet { tableView?.reloadData() }
     }
     
 }
+
+// Mark: UITableViewDataSource Extension
 
 extension CafesViewController: UITableViewDataSource {
     
@@ -30,22 +36,26 @@ extension CafesViewController: UITableViewDataSource {
         let venue = venues?[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier("cafe") as! CafeTableViewCell
         
+        // Set vanue name
         cell.nameLable?.text = venue?.name
+        // Set venue address
         if var address = venue?.location.address {
             if let cstreet = venue?.location.crossStreet {
                 address += " (\(cstreet))"
             }
             cell.addressLable?.text = address
         }
+        // Set venue distance
         if let dist = venue?.location.distance {
             cell.distanceLabel?.text = "\(dist) m"
         }
+        // Modify distance test to indicate venue is open or not
         if let open = venue?.isOpen where open == false {
             var distance = cell.distanceLabel?.text
             distance = distance?.characters.count > 0 ? distance?.stringByAppendingString("・") : ""
             cell.distanceLabel?.text = distance?.stringByAppendingString("CLOSE")
         }
-        
+        // Set venue rating number/color
         if let rating = venue?.rating,
             ratingColor = venue?.ratingColor
         {
@@ -63,11 +73,14 @@ extension CafesViewController: UITableViewDataSource {
     
 }
 
+// MARK: UITableViewDelegate Extension
+
 extension CafesViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
         let venue = venues?[indexPath.row]
         if let coordinate = venue?.location.coordinate {
+            // Ask user to leave the app to show the venue in Maps
             let actionSheetController = UIAlertController(title: "Open in Maps?", message: nil, preferredStyle: .Alert)
             let openInMapsAction = UIAlertAction(title: "Yes", style: .Default) { action in
                 let address = [
@@ -83,14 +96,18 @@ extension CafesViewController: UITableViewDelegate {
             }
             actionSheetController.addAction(openInMapsAction)
             actionSheetController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            
             presentViewController(actionSheetController, animated: true, completion: nil)
         }
     }
     
 }
 
+// MARK: Color Extention
+
 extension UIColor {
     
+    /// Initialize and return a color object using a hex string
     convenience init(hex: String, alpha: CGFloat) {
         var cString:String = hex.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet() as NSCharacterSet).uppercaseString
         

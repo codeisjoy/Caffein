@@ -21,40 +21,54 @@ extension CLLocationCoordinate2D {
 
 struct Service {
     
+    // MARK: API Constants
+    
     private let baseURL = "https://api.foursquare.com/v2/"
     private let xClientId = "ACAO2JPKM1MXHQJCK45IIFKRFR2ZVL0QASMCBCG5NPJQWF2G"
     private let xClientSecret = "YZCKUYJ1WHUV2QICBXUBEILZI1DMPUIDP5SHV043O04FKBHL"
     
+    // Mark: Private Properties
+    
     private let session: NSURLSession
+    
+    // MARK: Public Methods
     
     init() {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         session = NSURLSession(configuration: configuration)
     }
     
+    /// Starts sending a request to get venues close to given coordinate in given section
     func exploreVenues(coordinate: CLLocationCoordinate2D, section: String, complete: ([Venue]?, NSError?) -> () ) {
-        let initialURL = urlForEndpoint(.VenuesExplore)
-        guard let apiURL = initialURL else { return }
+        guard let apiURL = urlForEndpoint(.VenuesExplore) else {
+            complete(nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
+            return
+        }
         
         // Create the API URL for exploring venues with given parameters
         let components = NSURLComponents(URL: apiURL, resolvingAgainstBaseURL: false)
         components?.queryItems?.append(NSURLQueryItem(name: "service", value: section))
         components?.queryItems?.append(NSURLQueryItem(name: "ll", value: coordinate.string))
         
-        guard let url = components?.URL else { return }
+        guard let url = components?.URL else {
+            complete(nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadURL, userInfo: nil))
+            return
+        }
         
+        // Start sending the request to created API URL
         let task = session.dataTaskWithURL(url) { data, response, error in
+            // Return error if there is any
             guard error == nil else {
                 complete(nil, error)
                 return
             }
-            
+            // Can not continue if there is no data returned
             guard let data = data else {
-                //TODO: handle not having data
+                complete(nil, NSError(domain: NSURLErrorDomain, code: NSURLErrorBadServerResponse, userInfo: nil))
                 return
             }
             
-            let venues = self.parse(data)
+            let venues = self.parseVenusResponse(data)
             complete(venues, nil)
         }
         task.resume()
@@ -79,41 +93,41 @@ struct Service {
             NSURLQueryItem(name: "client_id", value: xClientId),
             NSURLQueryItem(name: "client_secret", value: xClientSecret),
             NSURLQueryItem(name: "v", value: dateFormatter.stringFromDate(NSDate())),
-            
-            NSURLQueryItem(name: "limit", value: "1")
         ]
         
         return components?.URL
     }
     
-    func parse(data: NSData) -> [Venue]? {
+    /// Parse the given data and retuens an array of venues or nil
+    private func parseVenusResponse(data: NSData) -> [Venue]? {
         do {
+            // Turn the response to a JSON
             let json = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-            let reqCode: Int? = json["meta"].flatMap { m in
+            
+            // Get the response code
+            let responseCode: Int? = json["meta"].flatMap { m in
                 return m["code"] as? Int
             }
-            if reqCode != 200 {
-                //TODO: handle the error
-                print("not valid response")
+            // Check to see if the code says the response is valid
+            // Stop if it is not valid
+            guard responseCode == 200 else {
+                print("No valid response ...")
                 return nil
             }
             
+            // Parse the response and get the items inside
             let items = json["response"]
                 .flatMap { $0["groups"] as? [[String: AnyObject]] }?
                 .filter { $0["name"] as? String == "recommended" }.first
                 .flatMap { $0["items"] as? [[String: AnyObject]] }
             
+            // Convert fetched items to venue model and return
             if let items = items {
                 return items.flatMap { Venue($0) }
             }
-            else {
-                print("no item!")
-            }
-            
-        } catch {
-            //TODO: handle not having the json
-            print(error)
         }
+        // If response is not a valid json ...
+        catch { print(error) }
         
         return nil
     }
