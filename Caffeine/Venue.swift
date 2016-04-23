@@ -48,7 +48,7 @@ struct VenueLocation {
     let country: String?
     let postalCode: String?
     
-    let distance: Float?
+    let distance: Int?
     let coordinate: CLLocationCoordinate2D?
     
     init(_ location: [String: AnyObject]) {
@@ -59,7 +59,7 @@ struct VenueLocation {
         country = location["country"] as? String
         postalCode = location["postalCode"] as? String
         
-        distance = location["distance"] as? Float
+        distance = location["distance"] as? Int
         if let lat = location["lat"] as? Double, lng = location["lng"] as? Double {
             coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lng)
         } else {

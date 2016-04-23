@@ -19,6 +19,7 @@
 		04647F131CC9A24E00EE1C26 /* CaffeineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04647F121CC9A24E00EE1C26 /* CaffeineUITests.swift */; };
 		04647F231CC9AB9900EE1C26 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04647F221CC9AB9900EE1C26 /* MapKit.framework */; };
 		04F97EA81CCA2E1300E9386D /* Venue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F97EA71CCA2E1300E9386D /* Venue.swift */; };
+		04F97EAA1CCA58D500E9386D /* CafeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F97EA91CCA58D500E9386D /* CafeTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		04647F141CC9A24E00EE1C26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04647F221CC9AB9900EE1C26 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		04F97EA71CCA2E1300E9386D /* Venue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Venue.swift; sourceTree = "<group>"; };
+		04F97EA91CCA58D500E9386D /* CafeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CafeTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				04647EF21CC9A24D00EE1C26 /* AppDelegate.swift */,
 				04647EF41CC9A24D00EE1C26 /* ViewController.swift */,
 				042A1AE71CC9B39300D22F61 /* CafesViewController.swift */,
+				04F97EA91CCA58D500E9386D /* CafeTableViewCell.swift */,
 				042A1AE91CC9BB5100D22F61 /* Service.swift */,
 				04F97EA71CCA2E1300E9386D /* Venue.swift */,
 				04647EF61CC9A24D00EE1C26 /* Main.storyboard */,
@@ -283,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04F97EAA1CCA58D500E9386D /* CafeTableViewCell.swift in Sources */,
 				04647EF51CC9A24D00EE1C26 /* ViewController.swift in Sources */,
 				04F97EA81CCA2E1300E9386D /* Venue.swift in Sources */,
 				042A1AEA1CC9BB5100D22F61 /* Service.swift in Sources */,

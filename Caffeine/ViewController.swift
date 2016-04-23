@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 final class ViewController: UIViewController {
     
     @IBOutlet var searchButton: UIButton?
+    
+    let service = Service()
+    private var venues: [Venue]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,9 +26,28 @@ final class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "show detail" {
+            let cafesViewController = (segue.destinationViewController as? UINavigationController).flatMap { nav in
+                nav.viewControllers.first as? CafesViewController
+            }
+            cafesViewController?.venues = venues
+        }
+    }
+    
     @IBAction func updateCafesList() {
-        print("Update Cafés ...")
+        service.exploreVenues(CLLocationCoordinate2D(latitude: 40.7,longitude: -74), section: "cafe") { [unowned self] venues, error in
+            guard error == nil else {
+                print(error)
+                return
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.venues = venues?.sort { $0.location.distance < $1.location.distance }
+                self.performSegueWithIdentifier("show detail", sender: self)
+            }
+        }
     }
 }
 
